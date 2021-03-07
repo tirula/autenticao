@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>floripa</groupId>
-	<artifactId>creativedrive</artifactId>
+	<artifactId>autenticacao</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
@@ -22,7 +22,7 @@
 		<dependencies>
 			<dependency>
 				<groupId>floripa</groupId>
-				<artifactId>creativedrive-backend</artifactId>
+				<artifactId>autenticacao-backend</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
@@ -61,6 +61,6 @@
 	</dependencies>
 
 	<modules>
-		<module>creativedrive-backend</module>
+		<module>autenticacao-backend</module>
 	</modules>
 </project>
