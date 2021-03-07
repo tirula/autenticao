@@ -1,10 +1,9 @@
 package floripa.autenticacao.backend.services;
 
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
-import floripa.autenticacao.backend.exception.CreativeDriveException;
+import floripa.autenticacao.backend.exception.AutenticationApiException;
 import floripa.autenticacao.backend.persistence.model.Address;
 import floripa.autenticacao.backend.persistence.model.ERole;
 import floripa.autenticacao.backend.persistence.model.Role;
@@ -12,19 +11,19 @@ import floripa.autenticacao.backend.persistence.model.User;
 import floripa.autenticacao.backend.persistence.repository.AddressRepository;
 import floripa.autenticacao.backend.persistence.repository.RoleRepository;
 import floripa.autenticacao.backend.persistence.repository.UserRepository;
+import floripa.autenticacao.backend.security.services.UserDetailsImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.*;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import floripa.autenticacao.backend.payload.request.UsuarioRequest;
 
 /**
- * 
+ *
  * @author brunno
  *
  */
@@ -45,48 +44,26 @@ public class UserService {
 	@Autowired
 	private PasswordEncoder encoder;
 
-	@EventListener
-	public void firstTry(ApplicationReadyEvent event) {
-		logger.info("Verificando insercao de dados basicos");
-		Optional<Role> role = this.roleRepository.findByName(ERole.ROLE_ADMIN);
-		if (role.isEmpty()) {
-			Role r = new Role();
-			r.setName(ERole.ROLE_ADMIN);
-			this.roleRepository.save(r);
-		}
-		role = this.roleRepository.findByName(ERole.ROLE_USER);
-		if (role.isEmpty()) {
-			Role r = new Role();
-			r.setName(ERole.ROLE_USER);
-			this.roleRepository.save(r);
-		}
-		Optional<User> admin = this.userRepository.findByUsername("admin");
-		if (admin.isEmpty()) {
-			UsuarioRequest request = new UsuarioRequest();
-			request.setEmail("admin@admin.com");
-			request.setPassword("admin");
-			request.setUsername("admin");
-			request.setRole(Set.of("admin"));
-			save(request);
-		}
 
-		// repo.save(new Entity(...));
+
+	public User buscar(String id){
+		User u = this.userRepository.findById(id).orElseThrow(() -> new AutenticationApiException("Usuário não encontrado : " + id));
+		return u;
 	}
-
-	public void save(UsuarioRequest request) {
+	public User save(UsuarioRequest request) {
 		logger.info("save");
 		if (userRepository.existsByUsername(request.getUsername())) {
-			throw new CreativeDriveException("Usuario ja existe");
+			throw new AutenticationApiException("Usuário já existe");
 		}
 		if (userRepository.existsByEmail(request.getEmail())) {
-			throw new CreativeDriveException("Email ja existe cadastrado");
+			throw new AutenticationApiException("Email já existe cadastrado");
 		}
 		User user = new User(request.getUsername(), request.getEmail(), encoder.encode(request.getPassword()));
 		Set<String> strRoles = request.getRoles();
 		Set<Role> roles = new HashSet<>();
 
 		if (strRoles == null) {
-			Role userRole = roleRepository.findByName(ERole.ROLE_USER).orElseThrow(() -> new RuntimeException("Error: Perfil nao encontrado."));
+			Role userRole = roleRepository.findByName(ERole.ROLE_USER).orElseThrow(() -> new RuntimeException("Error: Perfil não encontrado."));
 			roles.add(userRole);
 		} else {
 			trataRoles(strRoles, roles);
@@ -99,7 +76,7 @@ public class UserService {
 			this.addressRepository.save(address);
 			user.setAddress(address);
 		}
-		userRepository.save(user);
+		return userRepository.save(user);
 
 	}
 
@@ -107,11 +84,11 @@ public class UserService {
 		strRoles.forEach(role -> {
 			switch (role) {
 			case "admin":
-				Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN).orElseThrow(() -> new RuntimeException("Error: Perfil nao encontrado."));
+				Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN).orElseThrow(() -> new RuntimeException("Error: Perfil não encontrado."));
 				roles.add(adminRole);
 				break;
 			default:
-				Role userRole = roleRepository.findByName(ERole.ROLE_USER).orElseThrow(() -> new RuntimeException("Error: Perfil nao encontrado."));
+				Role userRole = roleRepository.findByName(ERole.ROLE_USER).orElseThrow(() -> new RuntimeException("Error: Perfil não encontrado."));
 				roles.add(userRole);
 			}
 		});
@@ -132,26 +109,23 @@ public class UserService {
 	}
 
 	public void update(UsuarioRequest request, String id) {
-		User u = this.userRepository.findById(id).orElseThrow(() -> new CreativeDriveException("Usuario nao encontrado : " + id));
-		if (request.getPassword() != null && request.getPassword().equals("")) {
-			u.setPassword(encoder.encode(request.getPassword()));
+		User u = this.userRepository.findById(id).orElseThrow(() -> new AutenticationApiException("Usuário não encontrado : " + id));
+		updatePassword(request, u);
+		updateRoles(request, u);
+		updateAddress(request, u);
+		updatePhoneNumber(request, u);
+		//implementar CascadingMongoEventListener
+		if(u.getRoles() != null){
+			this.roleRepository.saveAll(u.getRoles());
 		}
-		if (request.getRoles() != null && !request.getRoles().isEmpty()) {
-			Set<String> strRoles = request.getRoles();
-			Set<Role> roles = new HashSet<>();
-			trataRoles(strRoles, roles);
-			u.setRoles(roles);
+		if(u.getAddress() != null){
+			this.addressRepository.save(u.getAddress());
 		}
+		this.userRepository.save(u);
 
-		if (request.getAddress() != null && u.getAddress() != null ) {
-			u.getAddress().setStreet(request.getAddress());
-		} else if (request.getAddress() != null && u.getAddress() == null ) {
-			Address add = new Address();
-			add.setStreet(request.getAddress());
-			this.addressRepository.save(add);
-			u.setAddress(add);
-		}
+	}
 
+	private void updatePhoneNumber(UsuarioRequest request, User u) {
 		if (request.getPhoneNumber() != null && u.getAddress() != null) {
 			u.getAddress().setPhoneNumber(request.getPhoneNumber());
 		} else if (request.getPhoneNumber() != null && u.getAddress() != null) {
@@ -160,12 +134,36 @@ public class UserService {
 			this.addressRepository.save(add);
 			u.setAddress(add);
 		}
-		this.userRepository.save(u);
+	}
 
+	private void updateAddress(UsuarioRequest request, User u) {
+		if (request.getAddress() != null && u.getAddress() != null ) {
+			u.getAddress().setStreet(request.getAddress());
+		} else if (request.getAddress() != null && u.getAddress() == null ) {
+			Address add = new Address();
+			add.setStreet(request.getAddress());
+			this.addressRepository.save(add);
+			u.setAddress(add);
+		}
+	}
+
+	private void updatePassword(UsuarioRequest request, User u) {
+		if (request.getPassword() != null && !request.getPassword().equals("")) {
+			u.setPassword(encoder.encode(request.getPassword()));
+		}
+	}
+
+	private void updateRoles(UsuarioRequest request, User u) {
+		if (request.getRoles() != null && !request.getRoles().isEmpty()) {
+			Set<String> strRoles = request.getRoles();
+			Set<Role> roles = new HashSet<>();
+			trataRoles(strRoles, roles);
+			u.getRoles().addAll(roles);
+		}
 	}
 
 	public void delete(String id) {
-		User u = this.userRepository.findById(id).orElseThrow(() -> new CreativeDriveException("Usuario nao encontrado : " + id));
+		User u = buscar(id);
 		this.userRepository.delete(u);
 	}
 

@@ -3,7 +3,7 @@ package floripa.autenticacao.backend.exception.handle;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
-import floripa.autenticacao.backend.exception.CreativeDriveException;
+import floripa.autenticacao.backend.exception.AutenticationApiException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -23,7 +23,7 @@ import springfox.documentation.annotations.ApiIgnore;
 public class CustomGlobalExceptionHandler {
 
 
-	@ExceptionHandler(CreativeDriveException.class)
+	@ExceptionHandler(AutenticationApiException.class)
 	public ResponseEntity<CustomErrorResponse> commonsBadRequest(Exception ex, WebRequest request) throws IOException {
 		CustomErrorResponse errors = new CustomErrorResponse();
 		errors.setTimestamp(LocalDateTime.now());

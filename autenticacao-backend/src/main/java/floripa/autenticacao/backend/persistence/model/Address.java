@@ -15,13 +15,11 @@ public class Address {
 	private String id;
 	
 	private String phoneNumber;
-	
+
 	private String street;
-	
-	
+
 	public Address() {
 	}
-
 
 	public String getId() {
 		return id;

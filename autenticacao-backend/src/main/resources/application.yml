@@ -1,0 +1,15 @@
+spring:
+  data:
+    mongodb:
+      uri: ${MONGO_URL:mongodb://root:camisa10@localhost:27017/autenticacao?authSource=admin}
+  profiles:
+    active: default
+creative:
+  drive:
+    jwtExpirationMs: 86400000
+    jwtSecret: AutenticacaoApiSecretKey
+logging:
+  level:
+    org:
+      springframework:
+        data: info

@@ -30,8 +30,7 @@ public class UsuarioRest {
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping(consumes = "application/json", produces  = "application/json")
 	public ResponseEntity<?> novoUsuario(@Valid @RequestBody UsuarioRequest request) {
-		this.userService.save(request);
-		return ResponseEntity.ok(new MessageResponse("Usuario salvo!"));
+		return ResponseEntity.ok(this.userService.save(request));
 	}
 	
 	@PreAuthorize("hasRole('ADMIN')")
@@ -69,5 +68,12 @@ public class UsuarioRest {
 		response.put("totalItems", users.getTotalElements());
 		response.put("totalPages", users.getTotalPages());
 		return ResponseEntity.ok(response);
+	}
+
+
+	@GetMapping(path = "{id}", consumes = "application/json", produces  = "application/json")
+	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+	public ResponseEntity<?>  buscarUsuario(@PathVariable("id")String id) {
+		return ResponseEntity.ok(this.userService.buscar(id));
 	}
 }

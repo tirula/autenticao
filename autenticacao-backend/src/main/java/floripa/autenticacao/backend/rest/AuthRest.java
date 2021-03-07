@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/auth")
 @Api(tags="Autenticação", description = "")
 public class AuthRest {
+
 	@Autowired
 	private AuthenticationManager authenticationManager;
 
