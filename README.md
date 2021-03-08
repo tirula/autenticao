@@ -45,7 +45,7 @@ Com a url da api em mãos executar os curls abaixo. Foi criado um usuário defau
 {{URL_API}}/swagger-ui.html
 ```
 
-#Aplicação em DEV
+# Aplicação em DEV
 
 ```.env
 docker-compose up -d
