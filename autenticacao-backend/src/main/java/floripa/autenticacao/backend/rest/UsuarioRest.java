@@ -43,14 +43,14 @@ public class UsuarioRest {
 	}
 	
 	@PreAuthorize("hasRole('ADMIN')")
-	@DeleteMapping(path = "{id}",consumes = "application/json", produces  = "application/json")
+	@DeleteMapping(path = "{id}")
 	public ResponseEntity<?> deletarUsuario(@PathVariable("id")String id) {
 		this.userService.delete(id);
 		return ResponseEntity.ok("Usuario excluido com sucesso");
 	}
 	
 	
-	@GetMapping(consumes = "application/json", produces  = "application/json")
+	@GetMapping
 	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	public ResponseEntity<?>  buscarUsuarios(
 			@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
@@ -71,7 +71,7 @@ public class UsuarioRest {
 	}
 
 
-	@GetMapping(path = "{id}", consumes = "application/json", produces  = "application/json")
+	@GetMapping(path = "{id}")
 	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	public ResponseEntity<?>  buscarUsuario(@PathVariable("id")String id) {
 		return ResponseEntity.ok(this.userService.buscar(id));

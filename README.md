@@ -70,7 +70,6 @@ minikube service list
 ```.env
 kubectl delete -f deploy/secret.yaml
 kubectl delete -f deploy/mongo-deployment.yaml
-kubectl delete -f deploy/mongo-express-deployment.yaml
 kubectl delete -f deploy/autenticacao-api-deployment.yaml
 
 ```

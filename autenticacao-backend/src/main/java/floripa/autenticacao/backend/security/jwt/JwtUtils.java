@@ -24,10 +24,10 @@ import io.jsonwebtoken.UnsupportedJwtException;
 public class JwtUtils {
 	private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
 
-	@Value("${creative.drive.jwtSecret}")
+	@Value("${autentitcao.jwtSecret}")
 	private String jwtSecret;
 
-	@Value("${creative.drive.jwtExpirationMs}")
+	@Value("${autentitcao.jwtExpirationMs}")
 	private int jwtExpirationMs;
 
 	public String generateJwtToken(Authentication authentication) {
