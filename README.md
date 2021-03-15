@@ -45,6 +45,37 @@ Com a url da api em mãos executar os curls abaixo. Foi criado um usuário defau
 {{URL_API}}/swagger-ui.html
 ```
 
+No autorize tem que colocar o Bearer TOKEN
+
+## curl - exempplo de login e inserir usuário
+
+login 
+
+```.env
+curl --location --request POST 'http://localhost:8080/auth' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "username":"admin",
+    "password":"admin"
+}'
+```
+
+inserir usuario
+
+```.env
+curl --location --request POST 'http://localhost:8080/usuarios' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTYxNTgxMjU4Mn0.fhQLPKzTzQGAs9f4ehq5DBhvDLASmQqAnwTGwjRlFbKGcqgNF71ZHqImUbdYtTcMKs6mfnaxhoB_nyR07HNYkQ' \
+--data-raw '{
+    "username":"usuario_legal",
+    "email":"legal@hotmail.com",
+    "password":"legal123",
+    "roles":["user"],
+    "address":"Ilha da magia",
+    "phoneNumber":"48999988979"
+}'
+```
+
 # Aplicação em DEV
 
 ```.env

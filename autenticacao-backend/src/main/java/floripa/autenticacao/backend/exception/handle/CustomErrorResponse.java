@@ -14,7 +14,7 @@ public class CustomErrorResponse {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
 	private LocalDateTime timestamp;
 	private int status;
-	private String error;
+	private Object error;
 	public LocalDateTime getTimestamp() {
 		return timestamp;
 	}
@@ -27,10 +27,10 @@ public class CustomErrorResponse {
 	public void setStatus(int status) {
 		this.status = status;
 	}
-	public String getError() {
+	public Object getError() {
 		return error;
 	}
-	public void setError(String error) {
+	public void setError(Object error) {
 		this.error = error;
 	}
 	
