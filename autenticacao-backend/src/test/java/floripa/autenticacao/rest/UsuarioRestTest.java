@@ -1,22 +1,14 @@
-package floripa.autenticacao.backend.rest;
+package floripa.autenticacao.rest;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import floripa.autenticacao.backend.persistence.model.User;
-import floripa.autenticacao.backend.persistence.repository.UserRepository;
-import floripa.autenticacao.backend.services.UserService;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.json.JacksonJsonParser;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.http.MediaType;
@@ -24,13 +16,11 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
+
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @AutoConfigureMockMvc

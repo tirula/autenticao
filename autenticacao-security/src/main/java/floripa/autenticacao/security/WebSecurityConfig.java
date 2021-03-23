@@ -1,7 +1,7 @@
-package floripa.autenticacao.backend.security;
+package floripa.autenticacao.security;
 
-import floripa.autenticacao.backend.security.jwt.AuthTokenFilter;
-import floripa.autenticacao.backend.security.services.UserDetailsServiceImpl;
+import floripa.autenticacao.security.jwt.AuthTokenFilter;
+import floripa.autenticacao.security.services.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,10 +36,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
-//		authenticationManagerBuilder.inMemoryAuthentication()
-//				.withUser("admin")
-//				.password("admin")
-//				.roles("ADMIN");
 		authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
 	}
 

@@ -3,9 +3,8 @@ package floripa.autenticacao.backend.rest;
 import javax.validation.Valid;
 
 import floripa.autenticacao.backend.payload.request.UsuarioRequest;
-import floripa.autenticacao.backend.payload.response.MessageResponse;
-import floripa.autenticacao.backend.persistence.model.User;
 import floripa.autenticacao.backend.services.UserService;
+import floripa.autenticacao.persistence.model.User;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

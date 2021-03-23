@@ -3,24 +3,21 @@ package floripa.autenticacao.backend.services;
 import java.util.HashSet;
 import java.util.Set;
 
+import floripa.autenticacao.backend.payload.request.UsuarioRequest;
 import floripa.autenticacao.backend.exception.AutenticationApiException;
-import floripa.autenticacao.backend.persistence.model.Address;
-import floripa.autenticacao.backend.persistence.model.ERole;
-import floripa.autenticacao.backend.persistence.model.Role;
-import floripa.autenticacao.backend.persistence.model.User;
-import floripa.autenticacao.backend.persistence.repository.AddressRepository;
-import floripa.autenticacao.backend.persistence.repository.RoleRepository;
-import floripa.autenticacao.backend.persistence.repository.UserRepository;
-import floripa.autenticacao.backend.security.services.UserDetailsImpl;
+import floripa.autenticacao.persistence.model.Address;
+import floripa.autenticacao.persistence.model.ERole;
+import floripa.autenticacao.persistence.model.Role;
+import floripa.autenticacao.persistence.model.User;
+import floripa.autenticacao.persistence.repository.AddressRepository;
+import floripa.autenticacao.persistence.repository.RoleRepository;
+import floripa.autenticacao.persistence.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import floripa.autenticacao.backend.payload.request.UsuarioRequest;
 
 /**
  *
@@ -37,10 +34,6 @@ public class UserService {
 
 	@Autowired
 	private RoleRepository roleRepository;
-
-	@Autowired
-	private AddressRepository addressRepository;
-
 	@Autowired
 	private PasswordEncoder encoder;
 
@@ -73,7 +66,6 @@ public class UserService {
 			Address address = new Address();
 			address.setPhoneNumber(request.getPhoneNumber());
 			address.setStreet(request.getAddress());
-			this.addressRepository.save(address);
 			user.setAddress(address);
 		}
 		return userRepository.save(user);
@@ -95,14 +87,6 @@ public class UserService {
 	}
 
 	public Page<User> findAll(User u,Pageable pageable) {
-//		ExampleMatcher matcher = ExampleMatcher
-//				.matchingAny()
-//				.withMatcher("username", match -> match.ignoreCase())
-//				//.withMatcher("email", match -> match.ignoreCase())
-//				.withIncludeNullValues()
-//				.withIgnorePaths("id","password","address","roles")
-//				;
-//		Example<User> userExample = Example.of(u,matcher);
 		Page<User> users = this.userRepository.findAll(pageable);
 		logger.info("Total de registros {} paginados {} ", users.getTotalElements(),users.getContent().size());
 		return users;
@@ -114,13 +98,6 @@ public class UserService {
 		updateRoles(request, u);
 		updateAddress(request, u);
 		updatePhoneNumber(request, u);
-		//implementar CascadingMongoEventListener
-		if(u.getRoles() != null){
-			this.roleRepository.saveAll(u.getRoles());
-		}
-		if(u.getAddress() != null){
-			this.addressRepository.save(u.getAddress());
-		}
 		this.userRepository.save(u);
 
 	}
@@ -131,7 +108,6 @@ public class UserService {
 		} else if (request.getPhoneNumber() != null && u.getAddress() != null) {
 			Address add = new Address();
 			add.setPhoneNumber(request.getPhoneNumber());
-			this.addressRepository.save(add);
 			u.setAddress(add);
 		}
 	}
@@ -142,7 +118,6 @@ public class UserService {
 		} else if (request.getAddress() != null && u.getAddress() == null ) {
 			Address add = new Address();
 			add.setStreet(request.getAddress());
-			this.addressRepository.save(add);
 			u.setAddress(add);
 		}
 	}

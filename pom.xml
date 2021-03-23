@@ -9,7 +9,7 @@
 	<packaging>pom</packaging>
 
 	<properties>
-		<java.version>11</java.version>
+		<java.version>15</java.version>
 	</properties>
 
 	<parent>
@@ -21,6 +21,14 @@
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
+				<groupId>floripa</groupId>
+				<artifactId>autenticacao-persistence</artifactId>
+				<version>${project.version}</version>
+			</dependency><dependency>
+				<groupId>floripa</groupId>
+				<artifactId>autenticacao-security</artifactId>
+				<version>${project.version}</version>
+			</dependency><dependency>
 				<groupId>floripa</groupId>
 				<artifactId>autenticacao-backend</artifactId>
 				<version>${project.version}</version>
@@ -61,6 +69,8 @@
 	</dependencies>
 
 	<modules>
+		<module>autenticacao-persistence</module>
+		<module>autenticacao-security</module>
 		<module>autenticacao-backend</module>
 	</modules>
 </project>

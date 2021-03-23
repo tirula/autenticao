@@ -1,11 +1,11 @@
-package floripa.autenticacao.backend.persistence.repository;
+package floripa.autenticacao.persistence.repository;
 
 import java.util.Optional;
 
-import floripa.autenticacao.backend.persistence.model.Role;
+import floripa.autenticacao.persistence.model.Role;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-import floripa.autenticacao.backend.persistence.model.ERole;
+import floripa.autenticacao.persistence.model.ERole;
 
 /**
  * 

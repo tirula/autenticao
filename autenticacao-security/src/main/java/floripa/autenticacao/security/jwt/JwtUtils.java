@@ -1,14 +1,14 @@
-package floripa.autenticacao.backend.security.jwt;
+package floripa.autenticacao.security.jwt;
 
 import java.util.Date;
 
+import floripa.autenticacao.persistence.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
-import floripa.autenticacao.backend.security.services.UserDetailsImpl;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
@@ -32,7 +32,7 @@ public class JwtUtils {
 
 	public String generateJwtToken(Authentication authentication) {
 
-		UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
+		User userPrincipal = (User) authentication.getPrincipal();
 
 		return Jwts.builder()
 				.setSubject((userPrincipal.getUsername()))

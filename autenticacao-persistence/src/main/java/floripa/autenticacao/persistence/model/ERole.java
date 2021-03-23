@@ -1,4 +1,4 @@
-package floripa.autenticacao.backend.persistence.model;
+package floripa.autenticacao.persistence.model;
 
 /**
  * 

@@ -1,8 +1,7 @@
-package floripa.autenticacao.backend.persistence.repository;
+package floripa.autenticacao.persistence.repository;
 
+import floripa.autenticacao.persistence.model.Address;
 import org.springframework.data.mongodb.repository.MongoRepository;
-
-import floripa.autenticacao.backend.persistence.model.Address;
 
 public interface AddressRepository extends MongoRepository<Address, String>{
 

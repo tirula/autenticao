@@ -1,11 +1,11 @@
 package floripa.autenticacao.backend.services;
 
 import floripa.autenticacao.backend.payload.request.UsuarioRequest;
-import floripa.autenticacao.backend.persistence.model.ERole;
-import floripa.autenticacao.backend.persistence.model.Role;
-import floripa.autenticacao.backend.persistence.model.User;
-import floripa.autenticacao.backend.persistence.repository.RoleRepository;
-import floripa.autenticacao.backend.persistence.repository.UserRepository;
+import floripa.autenticacao.persistence.model.ERole;
+import floripa.autenticacao.persistence.model.Role;
+import floripa.autenticacao.persistence.model.User;
+import floripa.autenticacao.persistence.repository.RoleRepository;
+import floripa.autenticacao.persistence.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

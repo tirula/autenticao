@@ -5,10 +5,10 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
-import floripa.autenticacao.backend.payload.request.LoginRequest;
 import floripa.autenticacao.backend.payload.response.JwtResponse;
-import floripa.autenticacao.backend.security.jwt.JwtUtils;
-import floripa.autenticacao.backend.security.services.UserDetailsImpl;
+import floripa.autenticacao.backend.payload.request.LoginRequest;
+import floripa.autenticacao.persistence.model.User;
+import floripa.autenticacao.security.jwt.JwtUtils;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -45,7 +45,7 @@ public class AuthRest {
 				new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		String jwt = jwtUtils.generateJwtToken(authentication);
-		UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+		User userDetails = (User) authentication.getPrincipal();
 		List<String> roles = userDetails.getAuthorities().stream()
 				.map(item -> item.getAuthority())
 				.collect(Collectors.toList());
