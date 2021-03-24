@@ -11,6 +11,6 @@ RUN mvn -f /home/app/pom.xml clean package -DskipTests
 #
 # Package stage
 #
-FROM openjdk:15
+FROM openjdk:11
 COPY --from=build /home/app/autenticacao-backend/target/autenticacao-backend.jar /usr/local/lib/autenticacao.jar
 ENTRYPOINT ["java","-jar","/usr/local/lib/autenticacao.jar"]
